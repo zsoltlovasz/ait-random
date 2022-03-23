@@ -4,6 +4,10 @@ const tracklist_length=1799;
 
 const _global_debug=1;
 
+function print_debug(instr){
+	$('#rawdata').append(instr+"<br/>\n");
+}
+
 function shuffle(array){
     let currentIndex = array.length,  randomIndex;
     // While there remain elements to shuffle...
@@ -17,7 +21,8 @@ function shuffle(array){
     return array;
 }
 
-function fill_array(output_a){
+function fill_array(){
+    var output_a=["a1;a2;10:3", "b1;b2;11:3", "c1;c2;12:3", "d1;d2;13:3", "e1;e2;14:3", "f1;f2;15:3"];
     $.ajax({
         url: ait_tracklist,
         success: function(data){
@@ -25,42 +30,47 @@ function fill_array(output_a){
         },
         error: function(){
             //alert("There was an error opening the tracklist.");
-	    output_a=[["a1", "a2", "10:3"],["b1", "b2", "11:3"],["c1", "c2", "12:3"],["d1", "d2", "13:3"],["e1", "e2", "14:3"],["f1", "f2", "15:3"]];
         }
     });
+    if(_global_debug)print_debug('first line fetched: ' + output_a[0]);
+    return output_a;
 }
 
 function display_array(input_a, time_limit){
     let tracklist_actual_length=0;
-    if(_global_debug)$('#rawdata').append('display_array called length of input: ' + input_a.length);
-    for(const tl_line of input_a){
+    if(_global_debug)print_debug('display_array called length of input: ' + input_a.length);
+    for(let i=0; i<input_a.length; i++){
+	tl_line=input_a[i];
+	print_debug('processing line: '+i+': '+tl_line);
 	tl_line_columns=tl_line.split(";");
 	tl_line_mins_secs=tl_line_columns[2].split(":");
-	tl_line_time=tl_line_mins_secs[0]*60+tl_line_mins_secs[1];
+	print_debug('tl_line_mins: '+tl_line_mins_secs[0]+' tl_line_secs: '+tl_line_mins_secs[1]);
+	tl_line_time=Number(tl_line_mins_secs[0])*60+Number(tl_line_mins_secs[1]);
 	tracklist_actual_length+=tl_line_time;
-	$('#tracklist').append(tl_line_columns[0] + "blahhh <br>\n");
-        //<div class="row">
-        //    <div class="col">' +
-        //        tl_line_columns[0] + '
-        //    </div>
-        //    <div class="col">' +
-        //        tl_line_columns[1] + '
-        //    </div>
-        //    <div class="col">' +
-        //        tl_line_columns[2] + '
-        //    </div>
-        //</div>
-	//');
+	$('#tracklist').append('\
+        <div class="row">\
+            <div class="col">' +
+                tl_line_columns[0] + '\
+            </div>\
+            <div class="col">' +
+                tl_line_columns[1] + '\
+            </div>\
+            <div class="col">' +
+                tl_line_columns[2] + '\
+            </div>\
+        </div>\
+	');
+	print_debug('tracklist_actual_length: '+tracklist_actual_length+' tracklist_length: '+tracklist_length);
 	if(tracklist_actual_length>tracklist_length)break;
     }
-    $('#rawdata').text(input_a[0]);
+    $('#rawdata').append(input_a[0]);
 }
 
 function _main_(){
     var ait_tracklist_lines=[];
 
-    fill_array(ait_tracklist_lines);
-    if(_global_debug)$('#rawdata').append('length of tracklist after fill_array(): ' + ait_tracklist_lines.lenght);
+    ait_tracklist_lines=fill_array();
+    if(_global_debug)print_debug('length of tracklist after fill_array(): ' + ait_tracklist_lines.length);
     shuffle(ait_tracklist_lines);
     display_array(ait_tracklist_lines, tracklist_length);
 }
