@@ -19,7 +19,6 @@ function fill_array(output_a){
     $.ajax({
         url: ait_tracklist,
         success: function(data){
-            //$('#rawdata').text(data);
 	    output_a=data.split("\n");
         },
         error: function(){
@@ -35,7 +34,7 @@ function display_array(input_a, time_limit){
 	tl_line_mins_secs=tl_line_columns[2].split(":");
 	tl_line_time=tl_line_mins_secs[0]*60+tl_line_mins_secs[1];
 	tracklist_actual_length+=tl_line_time;
-	$('#container').append(tl_line_columns[0] + "<br>\n");
+	$('#tracklist').append(tl_line_columns[0] + "<br>\n");
         //<div class="row">
         //    <div class="col">' +
         //        tl_line_columns[0] + '
