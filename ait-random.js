@@ -1,6 +1,6 @@
 const ait_tracklist="ait-tracklist.csv";
-
-var ait_tracklist_lines=[];
+//29min 59secs in secs
+const tracklist_length=1799;
 
 function shuffle(array){
     let currentIndex = array.length,  randomIndex;
@@ -15,18 +15,51 @@ function shuffle(array){
     return array;
 }
 
-
-$(document).ready(function(){
+function fill_array(output_a){
     $.ajax({
         url: ait_tracklist,
         success: function(data){
             //$('#rawdata').text(data);
-	    ait_tracklist_lines=data.split("\n");
-	    shuffle(ait_tracklist_lines);
-            $('#rawdata').text(ait_tracklist_lines[0]);
+	    output_a=data.split("\n");
         },
         error: function(){
             alert("There was an error opening the tracklist.");
         }
     });
+}
+
+function display_array(input_a, time_limit){
+    let tracklist_actual_length=0;
+    for(const tl_line of input_a){
+	tl_line_columns=tl_line.split(";");
+	tl_line_mins_secs=tl_line_columns[2].split(":");
+	tl_line_time=tl_line_mins_secs[0]*60+tl_line_mins_secs[1];
+	tracklist_actual_length+=tl_line_time;
+	$('#container').append(tl_line_columns[0] + "<br>\n");
+        //<div class="row">
+        //    <div class="col">' +
+        //        tl_line_columns[0] + '
+        //    </div>
+        //    <div class="col">' +
+        //        tl_line_columns[1] + '
+        //    </div>
+        //    <div class="col">' +
+        //        tl_line_columns[2] + '
+        //    </div>
+        //</div>
+	//');
+    }
+    $('#rawdata').text(input_a[0]);
+}
+
+function _main_(){
+    var ait_tracklist_lines=[];
+
+    fill_array(ait_tracklist_lines);
+    shuffle(ait_tracklist_lines);
+    display_array(ait_tracklist_lines, tracklist_length);
+}
+
+$(document).ready(function(){
+    _main_();
 })
