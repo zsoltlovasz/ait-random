@@ -26,7 +26,7 @@ function fill_array(){
     $.ajax({
         url: ait_tracklist,
         success: function(data){
-	    output_a=data.split("\n");
+	    output_a.push(...data.split("\n"));
         },
         error: function(){
             alert("There was an error opening the tracklist.");
