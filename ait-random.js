@@ -6,6 +6,7 @@ const _global_debug=1;
 
 function print_debug(instr){
 	$('#rawdata').append(instr+"<br/>\n");
+	console.log(instr+"\n");
 }
 
 function shuffle(array){
@@ -27,6 +28,7 @@ function fill_array(){
         url: ait_tracklist,
         success: function(data){
 	    output_a.push(...data.split("\n"));
+	    if(_global_debug)print_debug('length of output_a after pushing ajax data: '+output_a.length);
         },
         error: function(){
             alert("There was an error opening the tracklist.");
