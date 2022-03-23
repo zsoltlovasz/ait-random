@@ -22,7 +22,7 @@ function shuffle(array){
 }
 
 function fill_array(){
-    var output_a=["a1;a2;10:3", "b1;b2;11:3", "c1;c2;12:3", "d1;d2;13:3", "e1;e2;14:3", "f1;f2;15:3"];
+    var output_a=[];
     $.ajax({
         url: ait_tracklist,
         success: function(data){
@@ -32,6 +32,7 @@ function fill_array(){
             alert("There was an error opening the tracklist.");
         }
     });
+    if(!output_a.length)output_a=["a1;a2;10:3", "b1;b2;11:3", "c1;c2;12:3", "d1;d2;13:3", "e1;e2;14:3", "f1;f2;15:3"];
     if(_global_debug)print_debug('first line fetched: ' + output_a[0]);
     return output_a;
 }
