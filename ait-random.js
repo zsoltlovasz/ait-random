@@ -1,6 +1,6 @@
-const ait-tracklist="ait-tracklist.csv";
+const ait_tracklist="ait-tracklist.csv";
 
-var ait-tracklist-lines=array();
+var ait_tracklist_lines=[];
 
 function shuffle(array){
     let currentIndex = array.length,  randomIndex;
@@ -18,12 +18,12 @@ function shuffle(array){
 
 $(document).ready(function(){
     $.ajax({
-        url: ait-tracklist,
+        url: ait_tracklist,
         success: function(data){
             //$('#rawdata').text(data);
-	    ait-tracklist-lines=data.split("\n");
-	    shuffle(ait-tracklist-lines);
-            $('#rawdata').text(ait-tracklist-lines[0]);
+	    ait_tracklist_lines=data.split("\n");
+	    shuffle(ait_tracklist_lines);
+            $('#rawdata').text(ait_tracklist_lines[0]);
         },
         error: function(){
             alert("There was an error opening the tracklist.");
