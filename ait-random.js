@@ -29,7 +29,7 @@ function fill_array(){
 	    output_a=data.split("\n");
         },
         error: function(){
-            //alert("There was an error opening the tracklist.");
+            alert("There was an error opening the tracklist.");
         }
     });
     if(_global_debug)print_debug('first line fetched: ' + output_a[0]);
