@@ -3,7 +3,7 @@ const ait_tracklist="ait-tracklist.csv";
 const tracklist_length=1799;
 const tracklist_element_id='#tracklist';
 
-const _global_debug=0;
+const _global_debug=1;
 
 function print_debug(instr){
 	if(!_global_debug)return;
@@ -60,7 +60,7 @@ function display_array(input_a){
 	print_debug('processing line: '+i+': '+tl_line);
 	tl_line_columns=tl_line.split(";");
 	tl_line_mins_secs=tl_line_columns[2].split(":");
-	print_debug('tl_line_mins: '+tl_line_mins_secs[0]+' tl_line_secs: '+tl_line_mins_secs[1]);
+	//print_debug('tl_line_mins: '+tl_line_mins_secs[0]+' tl_line_secs: '+tl_line_mins_secs[1]);
 	tl_line_time=Number(tl_line_mins_secs[0])*60+Number(tl_line_mins_secs[1]);
 	tracklist_actual_length+=tl_line_time;
 	$(tracklist_element_id).append(
@@ -70,7 +70,7 @@ function display_array(input_a){
 	        $('<div>', {class: 'col', html: tl_line_columns[2]})
 	    )
 	);
-	print_debug('tracklist_actual_length: '+tracklist_actual_length+' tracklist_length: '+tracklist_length);
+	//print_debug('tracklist_actual_length: '+tracklist_actual_length+' tracklist_length: '+tracklist_length);
 	if(tracklist_actual_length>tracklist_length){
 	    $(tracklist_element_id).append(
 		$('<div>', {class: 'row'}).append(
