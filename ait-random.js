@@ -48,6 +48,9 @@ function generate_and_display_tracklist(){
 function display_array(input_a){
     let tracklist_actual_length=0;
     let tracklist_id=1;
+    input_a=input_a.filter(function(v, i, a){
+	if(v)return v;
+    });
     shuffle(input_a);
     print_debug('display_array called length of input: ' + input_a.length);
     $(tracklist_element_id).append(
