@@ -48,21 +48,57 @@ function generate_and_display_tracklist(){
 function display_array(input_a){
     let tracklist_actual_length=0;
     let tracklist_id=1;
-    input_a=input_a.filter(function(v, i, a){
-	if(v)return v;
-    });
+
+    let tl_line='';
+    let tl_line_columns=[];
+    let tl_line_mins_secs=[];
+    let tl_line_time=0;
+
+    let just_a_single_genre_left=0;
+    let last_genre='';
+    let temp_storage_for_same_genre=[];
+
     shuffle(input_a);
     print_debug('display_array called length of input: ' + input_a.length);
+
     $(tracklist_element_id).append(
 	$('<div>', {class: 'row'}).append(
 	    $('<div>', {class: 'col text-center', html: 'Start of tracklist #'+tracklist_id})
 	)
     );
-    for(let i=0; i<input_a.length; i++){
-	tl_line=input_a[i];
-	print_debug('processing line: '+i+': '+tl_line);
-	tl_line_columns=tl_line.split(";");
-	tl_line_mins_secs=tl_line_columns[2].split(":");
+
+    while(input_a.length){
+	if(just_a_single_genre_left)tl_line=input_a.shift();
+	while(input_a.length && !just_a_single_genre_left){
+	    tl_line=input_a.shift();
+	    print_debug('processing line: '+tl_line);
+
+	    tl_line_columns=tl_line.split(";");
+	    if(tl_line_columns.length!=3){
+	        print_debug('error chopping up line into three parts: '+tl_line);
+	        continue;
+	    }
+	
+	    tl_line_mins_secs=tl_line_columns[2].split(":");
+	    if(tl_line_mins_secs.length!=2){
+	        print_debug('error chopping up the time part of the line into two parts: '+tl_line);
+	        continue;
+	    }
+	
+	    print_debug('testing if '+tl_line_columns[1]+' is equals to '+last_genre);
+	    if(tl_line_columns[1]===last_genre){
+		temp_storage_for_same_genre.push(tl_line);
+		if(!input_a.length)just_a_single_genre_left=1;
+		print_debug('putting '+tl_line+' to the back of the list as its genre matches previous: '+last_genre+' just_a_single_genre_left: '+just_a_single_genre_left+' temp_storage_for_same_genre: '+temp_storage_for_same_genre)
+		continue;
+	    }
+	
+	    last_genre=tl_line_columns[1];	
+	    break;
+	}
+	input_a.push(...temp_storage_for_same_genre);
+	temp_storage_for_same_genre=[];
+	
 	//print_debug('tl_line_mins: '+tl_line_mins_secs[0]+' tl_line_secs: '+tl_line_mins_secs[1]);
 	tl_line_time=Number(tl_line_mins_secs[0])*60+Number(tl_line_mins_secs[1]);
 	tracklist_actual_length+=tl_line_time;
@@ -73,8 +109,9 @@ function display_array(input_a){
 	        $('<div>', {class: 'col', html: tl_line_columns[2]})
 	    )
 	);
+
 	//print_debug('tracklist_actual_length: '+tracklist_actual_length+' tracklist_length: '+tracklist_length);
-	if(tracklist_actual_length>tracklist_length){
+	if(tracklist_actual_length>tracklist_length && tracklist_id<21){
 	    $(tracklist_element_id).append(
 		$('<div>', {class: 'row'}).append(
 		    $('<div>', {class: 'col text-center', html: 'End of tracklist #'+tracklist_id+', total length: '+secs2str(tracklist_actual_length)})
@@ -82,16 +119,20 @@ function display_array(input_a){
 	    );
             tracklist_actual_length=0;
 	    tracklist_id++;
+	    let div_html='Start of tracklist #'+tracklist_id;
+	    if(tracklist_id>20)div_html='Leftover tracks'
 	    $(tracklist_element_id).append(
 		$('<div>', {class: 'row'}).append(
-		    $('<div>', {class: 'col text-center', html: 'Start of tracklist #'+tracklist_id})
+		    $('<div>', {class: 'col text-center', html: div_html})
 		)
 	    );
 	}
     }
+    let div_html='End of tracklist #'+tracklist_id+', total length: '+secs2str(tracklist_actual_length);
+    if(tracklist_id>20)div_html='End of leftover tracks';
     $(tracklist_element_id).append(
 	$('<div>', {class: 'row'}).append(
-	    $('<div>', {class: 'col text-center', html: 'End of tracklist #'+tracklist_id+', total length: '+secs2str(tracklist_actual_length)})
+	    $('<div>', {class: 'col text-center', html: div_html})
 	)
     );
 }
