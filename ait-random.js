@@ -3,7 +3,7 @@ const ait_tracklist="ait-tracklist.csv";
 const tracklist_length=1799;
 const tracklist_element_id='#tracklist';
 
-const _global_debug=1;
+const _global_debug=0;
 
 function print_debug(instr){
 	if(!_global_debug)return;
